@@ -70,6 +70,10 @@ button {
     width: 1000px;
 }
 
+.card {
+    position: relative;
+}
+
 .card_front, .card_back {
     position: absolute;
 }
@@ -89,32 +93,20 @@ button {
 }
 
 /** card animation **/
-#game-area {
-    perspective: 1000px;
-    position: relative;
-}
-.card {
-    /*transform: rotateY(-180deg);*/
-    transition: transform 1s;
-}
-.match {
-    visibiity: hidden;
-}
-/*.animation-back {*/
-    /*transform: rotateY(-180deg);*/
-    /*transition: transform 1s;*/
-    /*-webkit-backface-visibility: hidden;*/
+/*#game-area {*/
+    /*perspective: 1000px;*/
+    /*position: relative;*/
 /*}*/
 
-/*.animation-front {*/
-    /*transform: rotateY(-180deg);*/
-    /*transition: transform 1s;*/
+/*.match {*/
+    /*visibiity: hidden;*/
 /*}*/
 
-#game-area .card {
-    transform-style: preserve-3d;
-    transition: transform 1s;
-}
+/*#game-area .card {*/
+    /*transform-style: preserve-3d;*/
+    /*transition: transform 1s;*/
+
+/*}*/
 
 /** About Me page css **/
 #about {
