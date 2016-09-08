@@ -4,28 +4,33 @@ var matched = [];
 var matches = 0;
 
 $(document).ready(function () {
+
     $(".card_back").click(function () {
         if (first_card === null) {
             $(this).hide();
             first_card = $(this).siblings().find('img').attr('src');
             console.log('first card clicked', first_card);
-
         } else {
             $(this).hide();
             second_card = $(this).siblings().find('img').attr('src');
             console.log('second card clicked', second_card);
             if (first_card === second_card) {
-                matched.push
+                var a = {};
+                var match = {
+                    first_card: first_card,
+                    second_card: second_card
+                };
+                matched.push(match);
                 matches += 1;
+                first_card = null;
+                second_card = null;
             } else {
-                setTimeout(function(){
-
-                    first_card.siblings().find('.card_back').show();
-                    second_card.siblings().find('.card_back').show();
-                    clicked.length = 0;
+                setTimeout(function () {
+                    $("img[src='" + first_card + "']").parent().siblings().show();
+                    $("img[src='" + second_card + "']").parent().siblings().show();
                     first_card = null;
                     second_card = null;
-                }, 1500);
+                }, 1000);
             }
         }
     })
