@@ -30,7 +30,7 @@ $(document).ready(function () {
                     $("img[src='" + second_card + "']").parent().siblings().show();
                     first_card = null;
                     second_card = null;
-                }, 1000);
+                }, 2000);
             }
         }
     })
