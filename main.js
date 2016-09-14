@@ -16,12 +16,12 @@ $(document).ready(function (){
             first_card = $(this).siblings().find('img').attr('src');
             console.log('first card clicked', first_card);
             displayStats();
+            attempts ++;
         } else {
             $(this).hide();
             second_card = $(this).siblings().find('img').attr('src');
             console.log('second card clicked', second_card);
             if (first_card === second_card) {
-                var a = {};
                 var match = {
                     first_card: first_card,
                     second_card: second_card
@@ -46,6 +46,10 @@ $(document).ready(function (){
         displayStats();
     });
 
+    $("#button").click(function(){
+        resetStats();
+        games_played ++;
+    });
 
     function displayStats(){
         $(".played_value").html(games_played);
@@ -56,7 +60,11 @@ $(document).ready(function (){
         $(".matches_value").html(matches);
     }
 
-    function resetStats(reset_clicked){
+    function resetStats(){
+        $('.card_back').show();
+        first_card = null;
+        second_card = null;
+        matched = [];
         accuracy = 0;
         matches = 0;
         attempts = 0;
