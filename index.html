@@ -49,84 +49,21 @@
             </ul>
         </li>
     </ul>
-    <button type="button" id="button" class="btn btn-primary btn-lg reset"
-    <!--ng-click="resetStats(), games_played = games_played + 1">Reset-->
+    <button type="button" id="button" class="btn btn-primary btn-lg reset">
+        <!--ng-click="resetStats(), games_played = games_played + 1">Reset-->
     </button>
 </div>
 <!-- Game Area ----------------------------------------------------------- -->
 <div id="game-area" ng-controller="infoController as ic">
 
-    <div ng-repeat="x in photos">
-        {{ x }}
+    <div ng-repeat='card in ic.cardArray' class="card">
+        <div class="card_front">
+            <img ng-src='{{ card.front }}' class="front" height="200px" width="150px">
+        </div>
+        <div class="card_back">
+            <img ng-src='{{ card.back }}' class="back" height="200px" width="150px">
+        </div>
     </div>
-
-
-    <!--<div class="card">-->
-    <!--<div class="card_front">-->
-    <!--<img src="photos/56-f100-truck-DSC-0037.jpg" class="front" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--<div class="card_back">-->
-    <!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--</div>-->
-
-
-    <!--<div class="card">-->
-    <!--<div class="card_front">-->
-    <!--<img src="photos/56-f100-truck-DSC-0037.jpg" class="front" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--<div class="card_back">-->
-    <!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="card">-->
-    <!--<div class="card_front">-->
-    <!--<img src="photos/2015-Porsche-918-Spyder.jpg" class="front" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--<div class="card_back">-->
-    <!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="card">-->
-    <!--<div class="card_front">-->
-    <!--<img src="photos/2015-Porsche-918-Spyder.jpg" class="front" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--<div class="card_back">-->
-    <!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="card">-->
-    <!--<div class="card_front">-->
-    <!--<img src="photos/ae86_levin_hatch_by_bramdc.jpg" class="front" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--<div class="card_back">-->
-    <!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="card">-->
-    <!--<div class="card_front">-->
-    <!--<img src="photos/ae86_levin_hatch_by_bramdc.jpg" class="front" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--<div class="card_back">-->
-    <!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="card">-->
-    <!--<div class="card_front">-->
-    <!--<img src="photos/Mercedes-Benz%20190%20Cosworth%20(2).jpg" class="front" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--<div class="card_back">-->
-    <!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="card">-->
-    <!--<div class="card_front">-->
-    <!--<img src="photos/Mercedes-Benz%20190%20Cosworth%20(2).jpg" class="front" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--<div class="card_back">-->
-    <!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
-    <!--</div>-->
-    <!--</div>-->
 
 </div>
 </body>
@@ -135,13 +72,21 @@
     var app = angular.module("myApp", []);
     app.controller("infoController", function () {
 
-        var imageArray = ['photos/56-f100-truck-DSC-0037.jpg', "photos/2015-Porsche-918-Spyder.jpg", "photos/944503_354720097988347_450575865_n .jpg",
-            "photos/ae86_levin_hatch_by_bramdc.jpg", "photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg", "photos/e14592bd933e2191698240c13f74c791.jpg", "photos/lowfall_0Vn6_0.jpg",
-            "Mercedes-Benz 190 Cosworth (2).jpg", "photos/morris-mini-1275-01.jpg", "photos/porsche-911-carrera-2.7-rs-04.jpg", "photos/web13.jpg"];
+        this.imageArray = ['photos/56-f100-truck-DSC-0037.jpg', "photos/2015-Porsche-918-Spyder.jpg", "photos/ae86_levin_hatch_by_bramdc.jpg",
+            "photos/e14592bd933e2191698240c13f74c791.jpg", "photos/lowfall_0Vn6_0.jpg", "photos/Mercedes-Benz 190 Cosworth (2).jpg",
+            "photos/morris-mini-1275-01.jpg", "photos/porsche-911-carrera-2.7-rs-04.jpg", "photos/web13.jpg"];
 
-        var card = {};
+        this.cardArray = [];
 
-
+        for (i = 0; i < this.imageArray.length; i++) {
+            var img = this.imageArray[i];
+            var card = {
+                front: img,
+                back: 'photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg'
+            };
+            this.cardArray.push(card);
+        }
+        console.log(this.cardArray);
 //        this.displayStats = function () {
 //            var accurate = Math.round(matches / attempts);
 //
@@ -161,6 +106,62 @@
 
 
 </script>
-
-
 </html>
+
+
+<!--<div class="card">-->
+<!--<div class="card_front">-->
+<!--<img src="photos/56-f100-truck-DSC-0037.jpg" class="front" height="200px" width="150px">-->
+<!--</div>-->
+<!--<div class="card_back">-->
+<!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="card">-->
+<!--<div class="card_front">-->
+<!--<img src="photos/2015-Porsche-918-Spyder.jpg" class="front" height="200px" width="150px">-->
+<!--</div>-->
+<!--<div class="card_back">-->
+<!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="card">-->
+<!--<div class="card_front">-->
+<!--<img src="photos/2015-Porsche-918-Spyder.jpg" class="front" height="200px" width="150px">-->
+<!--</div>-->
+<!--<div class="card_back">-->
+<!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="card">-->
+<!--<div class="card_front">-->
+<!--<img src="photos/ae86_levin_hatch_by_bramdc.jpg" class="front" height="200px" width="150px">-->
+<!--</div>-->
+<!--<div class="card_back">-->
+<!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="card">-->
+<!--<div class="card_front">-->
+<!--<img src="photos/ae86_levin_hatch_by_bramdc.jpg" class="front" height="200px" width="150px">-->
+<!--</div>-->
+<!--<div class="card_back">-->
+<!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="card">-->
+<!--<div class="card_front">-->
+<!--<img src="photos/Mercedes-Benz%20190%20Cosworth%20(2).jpg" class="front" height="200px" width="150px">-->
+<!--</div>-->
+<!--<div class="card_back">-->
+<!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="card">-->
+<!--<div class="card_front">-->
+<!--<img src="photos/Mercedes-Benz%20190%20Cosworth%20(2).jpg" class="front" height="200px" width="150px">-->
+<!--</div>-->
+<!--<div class="card_back">-->
+<!--<img src="photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg" class="back" height="200px" width="150px">-->
+<!--</div>-->
+<!--</div>-->
