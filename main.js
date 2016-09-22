@@ -6,7 +6,7 @@ var attempts = 0;
 var accuracy;
 var games_played = 0;
 
-$(document).ready(function (){
+$(document).ready(function () {
     displayStats();
 
 
@@ -16,7 +16,7 @@ $(document).ready(function (){
             first_card = $(this).siblings().find('img').attr('src');
             console.log('first card clicked', first_card);
             displayStats();
-            attempts ++;
+            attempts++;
         } else {
             $(this).hide();
             second_card = $(this).siblings().find('img').attr('src');
@@ -51,16 +51,16 @@ $(document).ready(function (){
         games_played ++;
     });
 
-    function displayStats(){
+    function displayStats() {
         $(".played_value").html(games_played);
         $(".attempts_value").html(attempts);
         var accurate = Math.round(matches / attempts);
         $(".accuracy_value").html(accurate * 100);
-        console.log('accurate :',accurate);
+        console.log('accurate :', accurate);
         $(".matches_value").html(matches);
     }
 
-    function resetStats(){
+    function resetStats() {
         $('.card_back').show();
         first_card = null;
         second_card = null;
@@ -71,5 +71,5 @@ $(document).ready(function (){
         displayStats();
     }
 
-
 });
+
