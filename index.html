@@ -69,13 +69,34 @@
 <script>
 
     var app = angular.module("myApp", []);
-    app.controller("infoController", function () {
+    app.controller("infoController", function ($timeout) {
+
+        var first_card = null;
+        var second_card = null;
+        var matched = [];
+        var matches = 0;
+        var attempts = 0;
+        this.cardArray = [];
+
 
         this.imageArray = ['photos/56-f100-truck-DSC-0037.jpg', "photos/2015-Porsche-918-Spyder.jpg", "photos/ae86_levin_hatch_by_bramdc.jpg",
             "photos/e14592bd933e2191698240c13f74c791.jpg", "photos/lowfall_0Vn6_0.jpg", "photos/Mercedes-Benz 190 Cosworth (2).jpg",
+            "photos/morris-mini-1275-01.jpg", "photos/porsche-911-carrera-2.7-rs-04.jpg", "photos/web13.jpg", 'photos/56-f100-truck-DSC-0037.jpg', "photos/2015-Porsche-918-Spyder.jpg", "photos/ae86_levin_hatch_by_bramdc.jpg",
+            "photos/e14592bd933e2191698240c13f74c791.jpg", "photos/lowfall_0Vn6_0.jpg", "photos/Mercedes-Benz 190 Cosworth (2).jpg",
             "photos/morris-mini-1275-01.jpg", "photos/porsche-911-carrera-2.7-rs-04.jpg", "photos/web13.jpg"];
 
-        this.cardArray = [];
+
+        function shuffle(array){
+            var currentIndex = array.length, temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+            return array;
+        }
 
         for (i = 0; i < this.imageArray.length; i++) {
             var img = this.imageArray[i];
@@ -85,102 +106,125 @@
                 show: false
             };
             this.cardArray.push(card);
+            this.cardArray = shuffle(this.cardArray);
         }
 
-        var first_card = null;
-        var second_card = null;
-
-        this.clickFunction = function(card) {
-            console.log('hello');
+        this.clickFunction = function (card) {
             console.log("card.show", card.show);
             if (first_card === null) {
                 card.show = true;
-                first_card = card.front;
+                first_card = card;
+                console.log("first card set", first_card);
             } else {
                 card.show = true;
-                second_card = card.front;
+                second_card = card;
+                console.log("second card set", second_card);
+                if (first_card.front === second_card.front) {
+                    var match = {
+                        first_card: first_card.front,
+                        second_card: second_card.front
+                    };
+                    console.log("match", match);
+                    matched.push(match);
+                    matches += 1;
+                    attempts += 1;
+                    first_card = null;
+                    second_card = null;
+//                    displayStats();
+                } else {
+                    $timeout(function () {
+                        console.log("timeout");
+                        console.log("card", card);
+                        first_card.show = false;
+                        second_card.show = false;
+                        first_card = null;
+                        second_card = null;
+                        attempts += 1;
+//                        displayStats();
+                    }, 2000);
+                    console.log('no match');
+                }
             }
         };
 
 
-
     });
-//    });
-//    var first_card = null;
-//    var second_card = null;
-//    var matched = [];
-//    var matches = 0;
-//    var attempts = 0;
-//    var accuracy;
-//    var games_played = 0;
-//
-//    $(document).ready(function () {
-//        displayStats();
-//
-//
-//        $(".card_back").click(function () {
-//            if (first_card === null) {
-//                $(this).hide();
-//                first_card = $(this).siblings().find('img').attr('src');
-//                console.log('first card clicked', first_card);
-//                displayStats();
-//                attempts++;
-//            } else {
-//                $(this).hide();
-//                second_card = $(this).siblings().find('img').attr('src');
-//                console.log('second card clicked', second_card);
-//                if (first_card === second_card) {
-//                    var match = {
-//                        first_card: first_card,
-//                        second_card: second_card
-//                    };
-//                    matched.push(match);
-//                    matches += 1;
-//                    attempts += 1;
-//                    first_card = null;
-//                    second_card = null;
-//                    displayStats();
-//                } else {
-//                    setTimeout(function () {
-//                        $("img[src='" + first_card + "']").parent().siblings().show();
-//                        $("img[src='" + second_card + "']").parent().siblings().show();
-//                        first_card = null;
-//                        second_card = null;
-//                        attempts += 1;
-//                        displayStats();
-//                    }, 2000);
-//                }
-//            }
-//            displayStats();
-//        });
-//
-//        $("#button").click(function(){
-//            resetStats();
-//            games_played ++;
-//        });
-//
-//        function displayStats() {
-//            $(".played_value").html(games_played);
-//            $(".attempts_value").html(attempts);
-//            var accurate = Math.round(matches / attempts);
-//            $(".accuracy_value").html(accurate * 100);
-//            console.log('accurate :', accurate);
-//            $(".matches_value").html(matches);
-//        }
-//
-//        function resetStats() {
-//            $('.card_back').show();
-//            first_card = null;
-//            second_card = null;
-//            matched = [];
-//            accuracy = 0;
-//            matches = 0;
-//            attempts = 0;
-//            displayStats();
-//        }
-//
-//    });
-//
+    //    });
+    //    var first_card = null;
+    //    var second_card = null;
+    //    var matched = [];
+    //    var matches = 0;
+    //    var attempts = 0;
+    //    var accuracy;
+    //    var games_played = 0;
+    //
+    //    $(document).ready(function () {
+    //        displayStats();
+    //
+    //
+    //        $(".card_back").click(function () {
+    //            if (first_card === null) {
+    //                $(this).hide();
+    //                first_card = $(this).siblings().find('img').attr('src');
+    //                console.log('first card clicked', first_card);
+    //                displayStats();
+    //                attempts++;
+    //            } else {
+    //                $(this).hide();
+    //                second_card = $(this).siblings().find('img').attr('src');
+    //                console.log('second card clicked', second_card);
+    //                if (first_card === second_card) {
+    //                    var match = {
+    //                        first_card: first_card,
+    //                        second_card: second_card
+    //                    };
+    //                    matched.push(match);
+    //                    matches += 1;
+    //                    attempts += 1;
+    //                    first_card = null;
+    //                    second_card = null;
+    //                    displayStats();
+    //                } else {
+    //                    setTimeout(function () {
+    //                        $("img[src='" + first_card + "']").parent().siblings().show();
+    //                        $("img[src='" + second_card + "']").parent().siblings().show();
+    //                        first_card = null;
+    //                        second_card = null;
+    //                        attempts += 1;
+    //                        displayStats();
+    //                    }, 2000);
+    //                }
+    //            }
+    //            displayStats();
+    //        });
+    //
+    //        $("#button").click(function(){
+    //            resetStats();
+    //            games_played ++;
+    //        });
+    //
+    //        function displayStats() {
+    //            $(".played_value").html(games_played);
+    //            $(".attempts_value").html(attempts);
+    //            var accurate = Math.round(matches / attempts);
+    //            $(".accuracy_value").html(accurate * 100);
+    //            console.log('accurate :', accurate);
+    //            $(".matches_value").html(matches);
+    //        }
+    //
+    //        function resetStats() {
+    //            $('.card_back').show();
+    //            first_card = null;
+    //            second_card = null;
+    //            matched = [];
+    //            accuracy = 0;
+    //            matches = 0;
+    //            attempts = 0;
+    //            displayStats();
+    //        }
+    //
+    //    });
+    //
 
 
 </script>
