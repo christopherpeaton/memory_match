@@ -110,6 +110,9 @@
         }
 
         this.clickFunction = function (card) {
+            if (first_card && second_card != null) {
+                return;
+            }
             console.log("card.show", card.show);
             if (first_card === null) {
                 card.show = true;
