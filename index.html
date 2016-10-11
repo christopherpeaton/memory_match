@@ -11,7 +11,7 @@
     <!--<script src="main.js"></script>-->
 
 </head>
-<body>
+<body ng-controller="programController as pc">
 <!-- Header ------------------------------------------------------------------ -->
 <div id="header">
     <div id="logo">
@@ -33,24 +33,24 @@
         <li>
             <ul class="list-group" id="games_played">
                 <li class="list-group-item">Games Played</li>
-                <li class="list-group-item played_value"></li>
+                <li class="list-group-item played_value">{{ pc.games_played }}</li>
             </ul>
             <ul class="list-group" id="attempts">
                 <li class="list-group-item">Attempts</li>
-                <li class="list-group-items attempts_value">{{ rc.attempts}}</li>
+                <li class="list-group-items attempts_value">{{ pc.attempts}}</li>
             </ul>
             <ul class="list-group" id="matches">
                 <li class="list-group-item">Matches</li>
-                <li class="list-group-item matches_value"></li>
+                <li class="list-group-item matches_value">{{ pc.matches }}</li>
             </ul>
             <ul class="list-group" id="accuracy">
                 <li class="list-group-item">Accuracy</li>
-                <li class="list-group-item accuracy_value"></li>
+                <li class="list-group-item accuracy_value">{{ pc.accuracy }}</li>
             </ul>
         </li>
     </ul>
-    <button type="button" id="button" class="btn btn-primary btn-lg reset">
-        <!--ng-click="resetStats(), games_played = games_played + 1">Reset-->
+    <button type="button" id="button" class="btn btn-primary btn-lg reset"
+        ng-click="pc.clickedResetButton()">Reset
     </button>
 </div>
 <!-- Game Area ----------------------------------------------------------- -->
@@ -60,7 +60,7 @@
         <div class="card_front">
             <img ng-src='{{ card.front }}' class="front" height="200px" width="150px">
         </div>
-        <div class="card_back" ng-click="ic.clickFunction(card)" ng-hide="card.show">
+        <div class="card_back" ng-click="ic.cardFunction(card)" ng-hide="card.show">
             <img ng-src='{{ card.back }}' class="back" height="200px" width="150px">
         </div>
     </div>
@@ -69,15 +69,16 @@
 <script>
 
     var app = angular.module("myApp", []);
-    app.controller("infoController", function ($timeout) {
 
-        var first_card = null;
-        var second_card = null;
-        var matched = [];
-        var matches = 0;
-        var attempts = 0;
+    app.service('sharingIsCaring', function() {
+
+        this.first_card = null;
+        this.second_card = null;
+        this.matched = [];
+        this.matches = 0;
+        this.attempts = 0;
+        this.accuracy = Math.round(this.matches / this.attempts);
         this.cardArray = [];
-
 
         this.imageArray = ['photos/56-f100-truck-DSC-0037.jpg', "photos/2015-Porsche-918-Spyder.jpg", "photos/ae86_levin_hatch_by_bramdc.jpg",
             "photos/e14592bd933e2191698240c13f74c791.jpg", "photos/lowfall_0Vn6_0.jpg", "photos/Mercedes-Benz 190 Cosworth (2).jpg",
@@ -85,8 +86,7 @@
             "photos/e14592bd933e2191698240c13f74c791.jpg", "photos/lowfall_0Vn6_0.jpg", "photos/Mercedes-Benz 190 Cosworth (2).jpg",
             "photos/morris-mini-1275-01.jpg", "photos/porsche-911-carrera-2.7-rs-04.jpg", "photos/web13.jpg"];
 
-
-        function shuffle(array){
+        this.shuffle = function(array){
             var currentIndex = array.length, temporaryValue, randomIndex;
             while (0 !== currentIndex) {
                 randomIndex = Math.floor(Math.random() * currentIndex);
@@ -96,31 +96,35 @@
                 array[randomIndex] = temporaryValue;
             }
             return array;
-        }
+        };
 
-        for (i = 0; i < this.imageArray.length; i++) {
-            var img = this.imageArray[i];
-            var card = {
-                front: img,
-                back: 'photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg',
-                show: false
-            };
-            this.cardArray.push(card);
-            this.cardArray = shuffle(this.cardArray);
-        }
+        this.createCard = function() {
+            for (i = 0; i < this.imageArray.length; i++) {
+                var img = this.imageArray[i];
+                var card = {
+                    front: img,
+                    back: 'photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg',
+                    show: false
+                };
+                this.cardArray.push(card);
+                this.cardArray = shuffle(this.cardArray);
+            }
+        };
 
-        this.clickFunction = function (card) {
-            if (first_card && second_card != null) {
+        this.cardFunction = function (card) {
+            if (this.first_card && this.second_card != null) {
                 return;
             }
             console.log("card.show", card.show);
-            if (first_card === null) {
+            if (this.first_card === null) {
                 card.show = true;
-                first_card = card;
+                this.first_card = card;
+                this.attempts = this.attempts += 1;
+                this.accuracy = this.accuracy * 100;
                 console.log("first card set", first_card);
             } else {
                 card.show = true;
-                second_card = card;
+                this.second_card = card;
                 console.log("second card set", second_card);
                 if (first_card.front === second_card.front) {
                     var match = {
@@ -128,28 +132,56 @@
                         second_card: second_card.front
                     };
                     console.log("match", match);
-                    matched.push(match);
-                    matches += 1;
-                    attempts += 1;
-                    first_card = null;
-                    second_card = null;
-//                    displayStats();
+                    this.matched.push(match);
+                    this.matches = this.matches += 1;
+                    this.attempts = this.attempts += 1;
+                    this.accuracy = this.accuracy * 100;
+                    this.first_card = null;
+                    this.second_card = null;
                 } else {
                     $timeout(function () {
                         console.log("timeout");
                         console.log("card", card);
-                        first_card.show = false;
-                        second_card.show = false;
-                        first_card = null;
-                        second_card = null;
-                        attempts += 1;
-//                        displayStats();
+                        this.first_card.show = false;
+                        this.second_card.show = false;
+                        this.first_card = null;
+                        this.second_card = null;
+                        this.attempts = this.attempts += 1;
+                        this.accuracy = this.accuracy * 100;
                     }, 2000);
                     console.log('no match');
                 }
             }
         };
 
+
+
+        this.resetStats = function() {
+            console.log("resetStats function", resetStats());
+            this.first_card.show = false;
+            this.second_card.show = false;
+            this.matched = [];
+            this.accuracy = 0;
+            this.matches = 0;
+            this.attempts = 0;
+        };
+
+    });
+
+    app.controller("programController", function(sharingIsCaring){
+
+        this.clickedResetButton = function(){
+            sharingIsCaring.resetStats();
+        }
+
+    });
+
+
+    app.controller("infoController", function ($timeout, sharingIsCaring) {
+
+        sharingIsCaring.shuffle();
+        sharingIsCaring.createCard();
+        sharingIsCaring.cardFunction();
 
     });
     //    });
