@@ -60,7 +60,7 @@
         <div class="card_front">
             <img ng-src='{{ card.front }}' class="front" height="200px" width="150px">
         </div>
-        <div class="card_back" ng-click="ic.cardFunction(card)" ng-hide="card.show">
+        <div class="card_back" ng-click="ic.cardClicked(card)" ng-hide="card.show">
             <img ng-src='{{ card.back }}' class="back" height="200px" width="150px">
         </div>
     </div>
@@ -79,6 +79,8 @@
         this.attempts = 0;
         this.accuracy = Math.round(this.matches / this.attempts);
         this.cardArray = [];
+        this.array = [];
+        this.card = null;
 
         this.imageArray = ['photos/56-f100-truck-DSC-0037.jpg', "photos/2015-Porsche-918-Spyder.jpg", "photos/ae86_levin_hatch_by_bramdc.jpg",
             "photos/e14592bd933e2191698240c13f74c791.jpg", "photos/lowfall_0Vn6_0.jpg", "photos/Mercedes-Benz 190 Cosworth (2).jpg",
@@ -86,14 +88,15 @@
             "photos/e14592bd933e2191698240c13f74c791.jpg", "photos/lowfall_0Vn6_0.jpg", "photos/Mercedes-Benz 190 Cosworth (2).jpg",
             "photos/morris-mini-1275-01.jpg", "photos/porsche-911-carrera-2.7-rs-04.jpg", "photos/web13.jpg"];
 
+        var currentIndex = this.array.length, temporaryValue, randomIndex;
         this.shuffle = function(array){
-            var currentIndex = array.length, temporaryValue, randomIndex;
+
             while (0 !== currentIndex) {
                 randomIndex = Math.floor(Math.random() * currentIndex);
                 currentIndex -= 1;
-                temporaryValue = array[currentIndex];
-                array[currentIndex] = array[randomIndex];
-                array[randomIndex] = temporaryValue;
+                temporaryValue = this.array[currentIndex];
+                this.array[currentIndex] = this.array[randomIndex];
+                this.array[randomIndex] = temporaryValue;
             }
             return array;
         };
@@ -107,26 +110,27 @@
                     show: false
                 };
                 this.cardArray.push(card);
-                this.cardArray = shuffle(this.cardArray);
+                this.cardArray = this.shuffle(this.cardArray);
             }
         };
 
-        this.cardFunction = function (card) {
+        this.cardClicked = function (card) {
             if (this.first_card && this.second_card != null) {
                 return;
             }
             console.log("card.show", card.show);
             if (this.first_card === null) {
-                card.show = true;
+                card.show = true; // i am getting a Cannot set property 'show' of undefined on this line.  i think its
+                // because it is taking in card as an argument, but card is not defined anywhere except on line 107 in another function.
                 this.first_card = card;
                 this.attempts = this.attempts += 1;
                 this.accuracy = this.accuracy * 100;
-                console.log("first card set", first_card);
+                console.log("first card set", this.first_card);
             } else {
                 card.show = true;
                 this.second_card = card;
-                console.log("second card set", second_card);
-                if (first_card.front === second_card.front) {
+                console.log("second card set", this.second_card);
+                if (this.first_card.front === this.second_card.front) {
                     var match = {
                         first_card: first_card.front,
                         second_card: second_card.front
@@ -141,7 +145,7 @@
                 } else {
                     $timeout(function () {
                         console.log("timeout");
-                        console.log("card", card);
+                        console.log("card", this.card);
                         this.first_card.show = false;
                         this.second_card.show = false;
                         this.first_card = null;
@@ -181,85 +185,10 @@
 
         sharingIsCaring.shuffle();
         sharingIsCaring.createCard();
-        sharingIsCaring.cardFunction();
+        sharingIsCaring.cardClicked(this.card);
+        this.cardClicked(card);
 
     });
-    //    });
-    //    var first_card = null;
-    //    var second_card = null;
-    //    var matched = [];
-    //    var matches = 0;
-    //    var attempts = 0;
-    //    var accuracy;
-    //    var games_played = 0;
-    //
-    //    $(document).ready(function () {
-    //        displayStats();
-    //
-    //
-    //        $(".card_back").click(function () {
-    //            if (first_card === null) {
-    //                $(this).hide();
-    //                first_card = $(this).siblings().find('img').attr('src');
-    //                console.log('first card clicked', first_card);
-    //                displayStats();
-    //                attempts++;
-    //            } else {
-    //                $(this).hide();
-    //                second_card = $(this).siblings().find('img').attr('src');
-    //                console.log('second card clicked', second_card);
-    //                if (first_card === second_card) {
-    //                    var match = {
-    //                        first_card: first_card,
-    //                        second_card: second_card
-    //                    };
-    //                    matched.push(match);
-    //                    matches += 1;
-    //                    attempts += 1;
-    //                    first_card = null;
-    //                    second_card = null;
-    //                    displayStats();
-    //                } else {
-    //                    setTimeout(function () {
-    //                        $("img[src='" + first_card + "']").parent().siblings().show();
-    //                        $("img[src='" + second_card + "']").parent().siblings().show();
-    //                        first_card = null;
-    //                        second_card = null;
-    //                        attempts += 1;
-    //                        displayStats();
-    //                    }, 2000);
-    //                }
-    //            }
-    //            displayStats();
-    //        });
-    //
-    //        $("#button").click(function(){
-    //            resetStats();
-    //            games_played ++;
-    //        });
-    //
-    //        function displayStats() {
-    //            $(".played_value").html(games_played);
-    //            $(".attempts_value").html(attempts);
-    //            var accurate = Math.round(matches / attempts);
-    //            $(".accuracy_value").html(accurate * 100);
-    //            console.log('accurate :', accurate);
-    //            $(".matches_value").html(matches);
-    //        }
-    //
-    //        function resetStats() {
-    //            $('.card_back').show();
-    //            first_card = null;
-    //            second_card = null;
-    //            matched = [];
-    //            accuracy = 0;
-    //            matches = 0;
-    //            attempts = 0;
-    //            displayStats();
-    //        }
-    //
-    //    });
-    //
 
 
 </script>
