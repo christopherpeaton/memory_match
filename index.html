@@ -50,7 +50,7 @@
         </li>
     </ul>
     <button type="button" id="button" class="btn btn-primary btn-lg reset"
-        ng-click="pc.clickedResetButton()">Reset
+            ng-click="pc.clickedResetButton()">Reset
     </button>
 </div>
 <!-- Game Area ----------------------------------------------------------- -->
@@ -70,88 +70,93 @@
 
     var app = angular.module("myApp", []);
 
-    app.service('sharingIsCaring', function() {
+    app.service('sharingIsCaring', function () {
 
-        this.first_card = null;
-        this.second_card = null;
-        this.matched = [];
-        this.matches = 0;
-        this.attempts = 0;
-        this.accuracy = Math.round(this.matches / this.attempts);
-        this.cardArray = [];
-        this.array = [];
-        this.card = null;
+        var self = this;
 
-        this.imageArray = ['photos/56-f100-truck-DSC-0037.jpg', "photos/2015-Porsche-918-Spyder.jpg", "photos/ae86_levin_hatch_by_bramdc.jpg",
+        self.first_card = null;
+        self.second_card = null;
+        self.matched = [];
+        self.matches = 0;
+        self.attempts = 0;
+        self.accuracy = Math.round(self.matches / self.attempts);
+        self.cardArray = [];
+        self.array = [];
+        self.card = null;
+
+        self.imageArray = ['photos/56-f100-truck-DSC-0037.jpg', "photos/2015-Porsche-918-Spyder.jpg", "photos/ae86_levin_hatch_by_bramdc.jpg",
             "photos/e14592bd933e2191698240c13f74c791.jpg", "photos/lowfall_0Vn6_0.jpg", "photos/Mercedes-Benz 190 Cosworth (2).jpg",
             "photos/morris-mini-1275-01.jpg", "photos/porsche-911-carrera-2.7-rs-04.jpg", "photos/web13.jpg", 'photos/56-f100-truck-DSC-0037.jpg', "photos/2015-Porsche-918-Spyder.jpg", "photos/ae86_levin_hatch_by_bramdc.jpg",
             "photos/e14592bd933e2191698240c13f74c791.jpg", "photos/lowfall_0Vn6_0.jpg", "photos/Mercedes-Benz 190 Cosworth (2).jpg",
             "photos/morris-mini-1275-01.jpg", "photos/porsche-911-carrera-2.7-rs-04.jpg", "photos/web13.jpg"];
 
-        var currentIndex = this.array.length, temporaryValue, randomIndex;
-        this.shuffle = function(array){
+        var currentIndex = self.array.length, temporaryValue, randomIndex;
+        self.shuffle = function (array) {
 
             while (0 !== currentIndex) {
                 randomIndex = Math.floor(Math.random() * currentIndex);
                 currentIndex -= 1;
-                temporaryValue = this.array[currentIndex];
-                this.array[currentIndex] = this.array[randomIndex];
-                this.array[randomIndex] = temporaryValue;
+                temporaryValue = self.array[currentIndex];
+                self.array[currentIndex] = self.array[randomIndex];
+                self.array[randomIndex] = temporaryValue;
             }
             return array;
         };
 
-        this.createCard = function() {
-            for (i = 0; i < this.imageArray.length; i++) {
-                var img = this.imageArray[i];
+        self.createCard = function () {
+            console.log("createCard");
+            for (i = 0; i < self.imageArray.length; i++) {
+                var img = self.imageArray[i];
                 var card = {
                     front: img,
                     back: 'photos/Design-Paper-Vine-pattern-Art-Nouveau.jpg',
                     show: false
                 };
-                this.cardArray.push(card);
-                this.cardArray = this.shuffle(this.cardArray);
+                self.cardArray.push(card);
+                self.cardArray = self.shuffle(self.cardArray);
             }
+            console.log("cardArray :", self.cardArray);
         };
 
-        this.cardClicked = function (card) {
-            if (this.first_card && this.second_card != null) {
+        self.cardClicked = function (card) {
+            if (self.first_card && self.second_card != null) {
                 return;
             }
-            console.log("card.show", card.show);
-            if (this.first_card === null) {
-                card.show = true; // i am getting a Cannot set property 'show' of undefined on this line.  i think its
-                // because it is taking in card as an argument, but card is not defined anywhere except on line 107 in another function.
-                this.first_card = card;
-                this.attempts = this.attempts += 1;
-                this.accuracy = this.accuracy * 100;
-                console.log("first card set", this.first_card);
+            console.log("card :", self.card);
+//            console.log("card.show", this.card.show);
+            if (self.first_card === null) {
+                card.show = true;
+                console.log("card.show :", card.show);
+                self.first_card = card;
+//                self.attempts = self.attempts += 1;
+//                self.accuracy = self.accuracy * 100;
+                console.log("first card set", self.first_card);
             } else {
                 card.show = true;
-                this.second_card = card;
-                console.log("second card set", this.second_card);
-                if (this.first_card.front === this.second_card.front) {
+                self.second_card = card;
+                console.log("second card set", self.second_card);
+                if (self.first_card.front === self.second_card.front) {
                     var match = {
                         first_card: first_card.front,
                         second_card: second_card.front
                     };
                     console.log("match", match);
-                    this.matched.push(match);
-                    this.matches = this.matches += 1;
-                    this.attempts = this.attempts += 1;
-                    this.accuracy = this.accuracy * 100;
-                    this.first_card = null;
-                    this.second_card = null;
+                    self.matched.push(match);
+                    self.matches = self.matches += 1;
+                    self.attempts = self.attempts += 1;
+                    self.accuracy = self.accuracy * 100;
+                    self.first_card = null;
+                    self.second_card = null;
                 } else {
                     $timeout(function () {
                         console.log("timeout");
-                        console.log("card", this.card);
-                        this.first_card.show = false;
-                        this.second_card.show = false;
-                        this.first_card = null;
-                        this.second_card = null;
-                        this.attempts = this.attempts += 1;
-                        this.accuracy = this.accuracy * 100;
+                        console.log("card", card);
+                        self.first_card.show = false;
+                        self.second_card.show = false;
+                        self.first_card = null;
+                        self.second_card = null;
+                        self.attempts = self.attempts += 1;
+                        self.accuracy = self.accuracy * 100;
                     }, 2000);
                     console.log('no match');
                 }
@@ -159,22 +164,21 @@
         };
 
 
-
-        this.resetStats = function() {
+        self.resetStats = function () {
             console.log("resetStats function", resetStats());
-            this.first_card.show = false;
-            this.second_card.show = false;
-            this.matched = [];
-            this.accuracy = 0;
-            this.matches = 0;
-            this.attempts = 0;
+            self.first_card.show = false;
+            self.second_card.show = false;
+            self.matched = [];
+            self.accuracy = 0;
+            self.matches = 0;
+            self.attempts = 0;
         };
 
     });
 
-    app.controller("programController", function(sharingIsCaring){
+    app.controller("programController", function (sharingIsCaring) {
 
-        this.clickedResetButton = function(){
+        this.clickedResetButton = function () {
             sharingIsCaring.resetStats();
         }
 
@@ -185,8 +189,8 @@
 
         sharingIsCaring.shuffle();
         sharingIsCaring.createCard();
-        sharingIsCaring.cardClicked(this.card);
-        this.cardClicked(card);
+        this.cardArray = sharingIsCaring.cardArray;
+        this.cardClicked = sharingIsCaring.cardClicked
 
     });
 
