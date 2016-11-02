@@ -70,7 +70,7 @@
 
     var app = angular.module("myApp", []);
 
-    app.service('sharingIsCaring', function () {
+    app.service('sharingIsCaring', function ($timeout) {
 
         var self = this;
 
@@ -137,8 +137,8 @@
                 console.log("second card set", self.second_card);
                 if (self.first_card.front === self.second_card.front) {
                     var match = {
-                        first_card: first_card.front,
-                        second_card: second_card.front
+                        first_card: self.first_card.front,
+                        second_card: self.second_card.front
                     };
                     console.log("match", match);
                     self.matched.push(match);
