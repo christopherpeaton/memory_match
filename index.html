@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<!-- go through and comment all functions, conditionals or complex logic in regular talk so anyone would know what it does
+w/o reading through code -->
+
 <html ng-app="myApp">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +11,6 @@
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <link rel='stylesheet’ href=’https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
     <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'></script>
-    <!--<script src="main.js"></script>-->
 
 </head>
 <body ng-controller="programController as pc">
@@ -19,7 +21,6 @@
     </div>
     <ul class=list-group" id="menu">
         <li class=list-group-item" id="title">Match Game</li>
-        <!--<li class=list-group-item"><a href="#settings">Settings</a></li>-->
         <li class=list-group-item"><a href="about.html">About</a></li>
     </ul>
 
@@ -41,7 +42,7 @@
             </ul>
             <ul class="list-group" id="matches">
                 <li class="list-group-item">Matches</li>
-                <li class="list-group-item matches_value">{{ pc.getGameStat("matches") }}</li>
+                <li class="list-group-item matches_value">{{ pc.getGameStat("matchedArray.length") }}</li>
             </ul>
             <ul class="list-group" id="accuracy">
                 <li class="list-group-item">Accuracy</li>
@@ -58,10 +59,10 @@
 
     <div ng-repeat='card in ic.cardArray' class="card">
         <div class="card_front">
-            <img ng-src='{{ card.front }}' class="front" height="200px" width="150px">
+            <img ng-src='{{ card.front }}' height="200px" width="150px">
         </div>
         <div class="card_back" ng-click="ic.cardClicked(card)" ng-hide="card.show">
-            <img ng-src='{{ card.back }}' class="back" height="200px" width="150px">
+            <img ng-src='{{ card.back }}' height="200px" width="150px">
         </div>
     </div>
 </div>
@@ -73,15 +74,12 @@
     app.service('sharingIsCaring', function ($timeout) {
 
         var self = this;
-
         self.first_card = null;
         self.second_card = null;
-        self.matched = [];
-        self.matches = 0;
+        self.matchedArray = [];
         self.attempts = 0;
         self.accuracy = 100;
         self.cardArray = [];
-        self.array = [];
         self.card = null;
 
         self.imageArray = ['photos/56-f100-truck-DSC-0037.jpg', "photos/2015-Porsche-918-Spyder.jpg", "photos/ae86_levin_hatch_by_bramdc.jpg",
@@ -91,8 +89,20 @@
             "photos/morris-mini-1275-01.jpg", "photos/porsche-911-carrera-2.7-rs-04.jpg", "photos/web13.jpg"];
 
         var temporaryValue, randomIndex;
-
-        self.shuffle = function (array) {
+        /**
+         * self.shuffle is a function that takes in the parameter of array.  it creates variable lastIndex = the last item of array( -1 is to give correct number of items in array).
+         * while loop runs while lastIndex is not equal to 0;
+         * randomIndex is equal to the largest number less than or equal to ( some random number between 0 and 1 multiplied by the number of items in the array);
+         * subtract one and assign the number to lastIndex;
+         * take number (lastIndex), use it as index in array and assign it to temporaryValue
+         * make index in array equal to randomIndex in array;
+         * assign randomIndex of array to temporaryValue;
+         * return the array;
+         *
+         * @param array
+         * @returns {*}
+         */
+        self.shuffle = function (array) { // since this is the only place 'array' is used, does 'array' work as a keyword, shuffling any array in the program
             var lastIndex = array.length - 1;
             while (0 !== lastIndex) {
                 randomIndex = Math.floor(Math.random() * lastIndex);
@@ -104,6 +114,17 @@
             return array;
         };
 
+        /**
+         * self.createCard is a function that
+         * console.logs createCard so as to know where/when the function is being called;
+         * for statement says that i = 0; when i is less than the length of self.imageArray it will take an image from self.imageArray at index i
+         * and assign it to img, it will then create card, assign img to property front, assign designated img to property back
+         * and assign false to property show.
+         * it will run this for statement for as many times as there are images in self.imageArray;
+         * pushes card into self.cardArray;
+         * calls self.shuffle function, taking in self.cardArray as parameter, and assigns to self.cardArray (shuffles array);
+         * console.logs string cardArray then prints out the entire self.cardArray;
+         */
         self.createCard = function () {
             console.log("createCard");
             for (i = 0; i < self.imageArray.length; i++) {
@@ -119,21 +140,43 @@
             console.log("cardArray :", self.cardArray);
         };
 
+        /**
+         * function self.cardClicked takes in parameter card;
+         * runs if statement checking to see if self.first_card and self.second_card are not equal to null, if they are equal to null
+         * it returns out of function;
+         * console.logs string card and what value self.card is;
+         * assign card.show as true;
+         * run if statement if self.first_card is null, then console.log string card.show and value of card.show;
+         * assign value of card to self.first_card;
+         * console.log string first card set, then the value of self.first_card;
+         * if self.first_card is not equal to null, then assign value of card to self.second_card;
+         * console.log string second card set, then value of self.second_card;
+         * next if statement says that if self.first_card front and self.second_card.front are the same;
+         * then create match object and assign it two key/value pairs: first_card is self.first_card.front and second_card is self.second_card.front;
+         * console.log string match, then value of match object;
+         * then push match object into self.matchedArray;
+         * console.log string self.matchedArray, then print the array self.matchedArray
+         * assign number of self.matchedArray.length to self.matchedArray;
+         * take value of self.attempts and add one to it, total it and assign new value to self.attempts;
+         * take number from self.matchedArray.length and divide it by value of self.attempts then multiply that by 100, take that number and round down to nearest whole number with Math.floor
+         * and assign value to self.accuracy;
+         *
+         *
+         * @param card
+         */
         self.cardClicked = function (card) {
             if (self.first_card && self.second_card != null) {
                 return;
             }
             console.log("card :", self.card);
-//            console.log("card.show", this.card.show);
+            card.show = true;
             if (self.first_card === null) {
-                card.show = true;
+//                card.show = true;
                 console.log("card.show :", card.show);
                 self.first_card = card;
-                self.attempts = self.attempts += 1;
-//                self.accuracy = self.accuracy * 100;
                 console.log("first card set", self.first_card);
             } else {
-                card.show = true;
+//                card.show = true;
                 self.second_card = card;
                 console.log("second card set", self.second_card);
                 if (self.first_card.front === self.second_card.front) {
@@ -142,11 +185,11 @@
                         second_card: self.second_card.front
                     };
                     console.log("match", match);
-                    self.matched.push(match);
-                    console.log("self.matched", self.matched);
-                    self.matches = self.matches += 1;
+                    self.matchedArray.push(match);
+                    console.log("self.matchedArray", self.matchedArray);
+                    self.matchedArray = self.matchedArray.length;
                     self.attempts = self.attempts += 1;
-//                    self.accuracy = self.accuracy * 100;
+                    self.accuracy = (Math.floor((self.matchedArray.length / self.attempts) * 100));
                     self.first_card = null;
                     self.second_card = null;
                 } else {
@@ -158,7 +201,7 @@
                         self.first_card = null;
                         self.second_card = null;
                         self.attempts = self.attempts += 1;
-                        self.accuracy = (Math.floor(100 / self.attempts));
+                        self.accuracy = (Math.floor((self.matchedArray.length / self.attempts) * 100));
                     }, 2000);
                     console.log('no match');
                 }
@@ -167,19 +210,18 @@
 
         self.resetStats = function () {
             console.log("resetStats function");
+            for (i = 0; i < self.cardArray.length; i++) {
+                self.cardArray[i].show = false;
+            }
             self.first_card = null;
             self.second_card = null;
-            self.matched = [];
+            self.matchedArray.length = 0;
             self.accuracy = 100;
-            self.matches = 0;
             self.attempts = 0;
         };
     });
 
     app.controller("programController", function (sharingIsCaring) {
-        this.accuracy = 0;
-        this.matches = 0;
-        this.attempts = 0;
 
         this.clickedResetButton = function () {
             sharingIsCaring.resetStats();
@@ -196,7 +238,6 @@
         this.cardArray = sharingIsCaring.cardArray;
         this.cardClicked = sharingIsCaring.cardClicked
     });
-
 
 </script>
 </html>

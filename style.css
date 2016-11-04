@@ -92,22 +92,6 @@ button {
     display: inline-block;
 }
 
-/** card animation **/
-/*#game-area {*/
-    /*perspective: 1000px;*/
-    /*position: relative;*/
-/*}*/
-
-/*.match {*/
-    /*visibiity: hidden;*/
-/*}*/
-
-/*#game-area .card {*/
-    /*transform-style: preserve-3d;*/
-    /*transition: transform 1s;*/
-
-/*}*/
-
 /** About Me page css **/
 #about {
     background: url("photos/nurburgring.jpg") no-repeat;
