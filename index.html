@@ -67,8 +67,8 @@ w/o reading through code -->
     </div>
 </div>
 </body>
-<script>
 
+<script>
     var app = angular.module("myApp", []);
 
     app.service('sharingIsCaring', function ($timeout) {
@@ -160,7 +160,20 @@ w/o reading through code -->
          * take value of self.attempts and add one to it, total it and assign new value to self.attempts;
          * take number from self.matchedArray.length and divide it by value of self.attempts then multiply that by 100, take that number and round down to nearest whole number with Math.floor
          * and assign value to self.accuracy;
-         *
+         * assign self.first_card to null;
+         * assign self.second_card to null;
+         * else
+         * run timeout function
+         * console.log string timeout;
+         * console.log string card, then log object card;
+         * assign self.first_card.show to false;
+         * assign self.second_card.show to false;
+         * assign self.first_card to null;
+         * assign self.second_card to null;
+         * take value of self.attempts and add one,  then assign value to self.attempts;
+         * take value of self.matchedArray.length and divide by self.attempts, take that value and multiply by 100. then apply Math.floor to the value.
+         * finish timeout function with time delay of 2000 milliseconds then finish function.
+         * console.log string no match;
          *
          * @param card
          */
@@ -208,6 +221,18 @@ w/o reading through code -->
             }
         };
 
+        /**
+         * self.resetStats is a function that
+         * console.logs string resetStats function;
+         * runs for statement where i = 0, when i is less than self.cardArray.length assign self.cardArray at index i property show to false.
+         * then increase index;
+         * assign self.first_card to null;
+         * assign self.second_card to null;
+         * assign self.matchedArray.length to 0;
+         * assign self.accuracy to 100;
+         * assign self.attemtps to 0;
+         */
+
         self.resetStats = function () {
             console.log("resetStats function");
             for (i = 0; i < self.cardArray.length; i++) {
@@ -221,6 +246,11 @@ w/o reading through code -->
         };
     });
 
+    /**
+     * this controller, named programController, is a function and takes in parameter sharingIsCaring;
+     * when reset button is clicked, clickedResetButton function runs the sharingIsCaring.resetStats function.
+     * getGameStat function takes in parameter stat and prints the stat that is the parameter in pc.getGameStat();
+     */
     app.controller("programController", function (sharingIsCaring) {
 
         this.clickedResetButton = function () {
@@ -232,6 +262,13 @@ w/o reading through code -->
         };
     });
 
+    /**
+     * this controller, named infoController,is a function that takes in parameters $timeout and sharingIsCaring.
+     * console.logs string shuffled;
+     * calls sharingIsCaring.createCard function;
+     * assigns sharingIsCaring.cardArray to this.cardArray;
+     * assigns sharingIsCaring.cardClicked to this.cardClicked.
+     */
     app.controller("infoController", function ($timeout, sharingIsCaring) {
         console.log("shuffled");
         sharingIsCaring.createCard();
